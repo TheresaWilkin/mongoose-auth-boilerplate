@@ -1,5 +1,6 @@
 const jwt = require('jwt-simple');
 const User = require('../models/user');
+const School = require('../models/school');
 require('dotenv').config();
 
 function tokenForUser(user) {
@@ -35,19 +36,25 @@ exports.signup = function(req, res, next) {
       return res.status(422).send({ error: 'username is in use' });
     }
 
+    let school = req.body.school;
     let user;
     if (role === 'teacher') {
+      if (!school) {
+        school = new School()._id;
+      }
       user = new User({
         username: username,
         password: password,
         role: role,
-        email: email
+        email: email,
+        school: school,
       });
     } else {
       user = new User({
         username: username,
         password: password,
-        role: role
+        role: role,
+        school: school,
       });
     }
 

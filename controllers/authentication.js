@@ -16,6 +16,7 @@ exports.signin = function(req, res, next) {
     role: req.user.role,
     email: req.user.email,
     id: req.user._id,
+    school: req.user.school,
   }
   res.send({ token: tokenForUser(req.user), user: user });
 }
@@ -40,17 +41,21 @@ exports.signup = function(req, res, next) {
     let user;
     if (role === 'teacher') {
       if (!school) {
-        school = new School()._id;
+        school = new School();
       }
       school.save(function(err) {
         if (err) { return next(err); }
-      });
-      user = new User({
-        username: username,
-        password: password,
-        role: role,
-        email: email,
-        school: school,
+        user = new User({
+          username: username,
+          password: password,
+          role: role,
+          email: email,
+          school: school._id,
+        });
+        user.save(function(err) {
+          if (err) { return next(err); }
+          res.json({ token: tokenForUser(user), user });
+        });
       });
     } else {
       user = new User({
@@ -59,19 +64,10 @@ exports.signup = function(req, res, next) {
         role: role,
         school: school,
       });
+      user.save(function(err) {
+        if (err) { return next(err); }
+        res.json({ token: tokenForUser(user), user });
+      });
     }
-
-    const newUser = {
-      username: user.username,
-      role: user.role,
-      email: user.email,
-      id: user._id,
-      school: user.school
-    };
-
-    user.save(function(err) {
-      if (err) { return next(err); }
-      res.json({ token: tokenForUser(user), user: newUser });
-    });
    });
 }

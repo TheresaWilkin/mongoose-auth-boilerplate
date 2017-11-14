@@ -16,7 +16,7 @@ const userSchema = new Schema({
       type : Date,
       default : Date.now
     },
-  school: author : { type: Schema.Types.ObjectId, ref: 'school' },
+  school: { type: Schema.Types.ObjectId, ref: 'school' },
 });
 
 // On Save Hook, encrypt password

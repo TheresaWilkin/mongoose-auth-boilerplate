@@ -42,6 +42,9 @@ exports.signup = function(req, res, next) {
       if (!school) {
         school = new School()._id;
       }
+      school.save(function(err) {
+        if (err) { return next(err); }
+      });
       user = new User({
         username: username,
         password: password,
@@ -63,11 +66,11 @@ exports.signup = function(req, res, next) {
       role: user.role,
       email: user.email,
       id: user._id,
+      school: user.school
     };
 
     user.save(function(err) {
       if (err) { return next(err); }
-
       res.json({ token: tokenForUser(user), user: newUser });
     });
    });

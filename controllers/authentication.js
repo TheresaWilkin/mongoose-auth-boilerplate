@@ -24,6 +24,7 @@ exports.signup = function(req, res, next) {
   User.findOne({ username: username }, function(err, existingUser) {
     if (err) { return next(err); }
     if (existingUser) {
+      console.error('existing user!!', existingUser)
       return res.status(422).send({ error: 'username is in use' });
     }
 

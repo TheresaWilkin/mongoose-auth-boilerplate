@@ -10,7 +10,13 @@ function tokenForUser(user) {
 exports.signin = function(req, res, next) {
   // user is already authenticated
   // just need to give token
-  res.send({ token: tokenForUser(req.user), user: req.user });
+  const user = {
+    username: req.user.username,
+    role: req.user.role,
+    email: req.user.email,
+    id: req.user._id,
+  }
+  res.send({ token: tokenForUser(req.user), user: user });
 }
 
 exports.signup = function(req, res, next) {
@@ -45,11 +51,17 @@ exports.signup = function(req, res, next) {
       });
     }
 
+    const newUser = {
+      username: user.username,
+      role: user.role,
+      email: user.email,
+      id: user._id,
+    };
 
     user.save(function(err) {
       if (err) { return next(err); }
 
-      res.json({ token: tokenForUser(user), user: user });
+      res.json({ token: tokenForUser(user), user: newUser });
     });
    });
 }

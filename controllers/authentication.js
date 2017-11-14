@@ -54,7 +54,7 @@ exports.signup = function(req, res, next) {
         });
         user.save(function(err) {
           if (err) { return next(err); }
-          res.json({ token: tokenForUser(user), user });
+          return res.json({ token: tokenForUser(user), user: user });
         });
       });
     } else {
@@ -69,7 +69,7 @@ exports.signup = function(req, res, next) {
       });
       user.save(function(err) {
         if (err) { return next(err); }
-        res.json({ token: tokenForUser(user), user });
+        res.json({ token: tokenForUser(user), user: user });
       });
     }
    });

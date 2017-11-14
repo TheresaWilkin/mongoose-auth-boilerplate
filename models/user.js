@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt-nodejs');
 const userSchema = new Schema({
   username: { type: String, unique: true, lowercase: true },
   email: { type: String, lowercase: true },
-  type: {
+  role: {
     type : String,
     default : 'teacher',
     enum : ['student', 'teacher']

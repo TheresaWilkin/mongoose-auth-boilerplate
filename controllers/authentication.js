@@ -58,6 +58,9 @@ exports.signup = function(req, res, next) {
         });
       });
     } else {
+      if (!school) {
+        return res.status(422).send({ error: 'School not found' });
+      }
       user = new User({
         username: username,
         password: password,

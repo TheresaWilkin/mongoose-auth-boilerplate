@@ -22,7 +22,7 @@ exports.signin = function(req, res, next) {
 }
 
 exports.signup = function(req, res, next) {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase();
   const password = req.body.password;
   const role = req.body.role;
   const email = req.body.email;
@@ -38,7 +38,7 @@ exports.signup = function(req, res, next) {
   User.findOne({ username: username }, function(err, existingUser) {
     if (err) { return next(err); }
     if (existingUser) {
-      return res.status(422).send({ error: 'username is in use' });
+      return res.status(422).send({ error: 'Username is in use' });
     }
 
     let school = req.body.school;
@@ -64,7 +64,7 @@ exports.signup = function(req, res, next) {
 }
 
 exports.signupStudent = function(req, res, next) {
-  const username = req.body.username;
+  const username = req.body.username.toLowerCase();
   const password = req.body.password;
   const role = req.body.role;
   const color = req.body.color;
@@ -78,7 +78,11 @@ exports.signupStudent = function(req, res, next) {
   }
 
   User.findOne({ username: username }, function(err, existingUser) {
-    if (err) { return next(err); }
+    if (err) {
+      console.log(1, err)
+      return res.status(400).send({ error: 'error 1'})
+    }
+
     if (existingUser) {
       return res.status(422).send({ error: 'Username is in use' });
     }
@@ -96,7 +100,10 @@ exports.signupStudent = function(req, res, next) {
         color: color,
       });
       user.save(function(err) {
-        if (err) { return next(err); }
+        if (err) {
+          console.log(2, err)
+          return res.status(400).send({ error: 'error 2'})
+        }
         res.json({ token: tokenForUser(user), user: user });
       });
    });

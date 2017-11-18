@@ -18,7 +18,7 @@ exports.getStudents = function(req, res, next) {
   User.find({ school: schoolId, role: 'student' }, function(err, users) {
     if (err) { return next(err); }
     if (!users || users.length === 0) {
-      return res.status(404).send({ error: 'No students found' });
+      return res.status(200).send({ byId: {}, all: [] });
     }
     const byId = groupById(users);
     return res.status(200).json({ users: byId })

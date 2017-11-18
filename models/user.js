@@ -17,6 +17,15 @@ const userSchema = new Schema({
       default : Date.now
     },
   school: { type: Schema.Types.ObjectId, ref: 'school' },
+  color: {
+    type: String,
+    default: 'blue',
+    enum: [
+      'blue',
+      'pink',
+      'green',
+    ]
+  }
 });
 
 // On Save Hook, encrypt password

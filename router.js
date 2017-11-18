@@ -12,4 +12,5 @@ module.exports = function(app) {
   app.get('/school/:id/students', requireAuth, Students.getStudents);
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);
+  app.post('/students/signup', Authentication.signupStudent);
 }

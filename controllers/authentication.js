@@ -132,8 +132,8 @@ exports.googleSignin = function(req, res, next) {
 
   // Validate the social token with Facebook
   validateWithProvider(network, socialToken).then(function (response) {
-    const profile = response.body;
-    console.log(profile)
+    const profile = response.data;
+    console.log('aaaa', profile, response.keys)
       // Return the user data we got from Facebook
       res.send({ token: tokenForUser(profile) });
     }).catch(function (err) {

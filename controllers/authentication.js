@@ -111,7 +111,7 @@ exports.signupStudent = function(req, res, next) {
 
 var providers = {
     google: {
-        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+        url: 'https://www.googleapis.com/auth/userinfo.profile'
     }
 };
 

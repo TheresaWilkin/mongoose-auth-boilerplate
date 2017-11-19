@@ -124,6 +124,7 @@ function validateWithProvider(network, socialToken) {
             })
 }
 
+
 exports.googleSignin = function(req, res, next) {
   // Grab the social network and token
   var network = req.body.network;

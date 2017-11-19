@@ -1,3 +1,4 @@
+const axios = require('axios');
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const School = require('../models/school');
@@ -101,7 +102,6 @@ exports.signupStudent = function(req, res, next) {
       });
       user.save(function(err) {
         if (err) {
-          console.log(2, err)
           return res.status(400).send({ error: 'error 2'})
         }
         res.json({ token: tokenForUser(user), user: user });
@@ -116,21 +116,12 @@ var providers = {
 };
 
 function validateWithProvider(network, socialToken) {
-    return new Promise(function (resolve, reject) {
         // Send a GET request to Facebook with the token as query string
-        request({
-                url: providers[network].url,
-                qs: {access_token: socialToken}
-            },
-            function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    resolve(JSON.parse(body));
-                } else {
-                    reject(err);
+        return axios.get(providers[network].url, {
+                params: {
+                  access_token: socialToken
                 }
-            }
-        );
-    });
+            })
 }
 
 exports.googleSignin = function(req, res, next) {
@@ -140,9 +131,11 @@ exports.googleSignin = function(req, res, next) {
 
   // Validate the social token with Facebook
   validateWithProvider(network, socialToken).then(function (profile) {
+    console.log(1, profile)
       // Return the user data we got from Facebook
-      res.send('Authenticated as: ' + profile.id);
+      res.status(200).send('Authenticated as: ' + profile.id);
   }).catch(function (err) {
+    console.log(2, err)
       res.send('Failed!' + err.message);
   });
 }

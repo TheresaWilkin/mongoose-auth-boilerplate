@@ -136,7 +136,7 @@ exports.googleSignin = function(req, res, next) {
   .then(function (response) {
     const profile = response.data;
     const url = 'https://www.googleapis.com/calendar/v3/calendars/'+profile.email+'/events?key=' + process.env.GOOGLE_CLIENT_ID + '/';
-    const formattedUrl = new Url(url);
+    const formattedUrl = new URL(url);
     console.log(formattedUrl)
     axios.get(formattedUrl, {
       params: {

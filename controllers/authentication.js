@@ -109,6 +109,30 @@ exports.signupStudent = function(req, res, next) {
    });
 }
 
+var providers = {
+    google: {
+        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+    }
+};
+
+function validateWithProvider(network, socialToken) {
+    return new Promise(function (resolve, reject) {
+        // Send a GET request to Facebook with the token as query string
+        request({
+                url: providers[network].url,
+                qs: {access_token: socialToken}
+            },
+            function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    resolve(JSON.parse(body));
+                } else {
+                    reject(err);
+                }
+            }
+        );
+    });
+}
+
 exports.googleSignin = function(req, res, next) {
   // Grab the social network and token
   var network = req.body.network;

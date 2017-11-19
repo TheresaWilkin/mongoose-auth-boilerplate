@@ -140,6 +140,7 @@ exports.googleSignin = function(req, res, next) {
       }
     })
     .then(respo => console.log(1, 'aaa', respo))
+    .catch(err => console.log(err));
     // Return the user data we got from Facebook
     res.send({ token: tokenForUser(profile) });
   }).catch(function (err) {

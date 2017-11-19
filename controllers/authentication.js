@@ -2,6 +2,7 @@ const axios = require('axios');
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const School = require('../models/school');
+const { URL } = require('url');
 require('dotenv').config();
 
 function tokenForUser(user) {
@@ -134,7 +135,10 @@ exports.googleSignin = function(req, res, next) {
   validateWithProvider(network, socialToken)
   .then(function (response) {
     const profile = response.data;
-    axios.get('https://www.googleapis.com/calendar/v3/calendars/tiawilkin%40gmail.com/events?key=' + process.env.GOOGLE_CLIENT_ID + '/', {
+    const url = 'https://www.googleapis.com/calendar/v3/calendars/'+profile.email+'/events?key=' + process.env.GOOGLE_CLIENT_ID + '/';
+    const formattedUrl = new Url(url);
+    console.log(formattedUrl)
+    axios.get(formattedUrl, {
       params: {
         access_token: socialToken
       }

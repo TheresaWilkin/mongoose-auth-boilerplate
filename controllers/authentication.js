@@ -134,7 +134,8 @@ exports.googleSignin = function(req, res, next) {
   validateWithProvider(network, socialToken)
   .then(function (response) {
     const profile = response.data;
-    axios.get(`https://www.googleapis.com/calendar/v3/calendars/tiawilkin%40gmail.com/events?key=${process.env.GOOGLE_CLIENT_ID}/`, {
+    console.log(process.env.GOOGLE_CLIENT_ID)
+    axios.get('https://www.googleapis.com/calendar/v3/calendars/tiawilkin%40gmail.com/events?key=' + process.env.GOOGLE_CLIENT_ID + '/', {
       params: {
         access_token: socialToken
       }

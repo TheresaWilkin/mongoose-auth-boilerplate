@@ -4,6 +4,7 @@ const User = require('../models/user');
 const School = require('../models/school');
 const { URL } = require('url');
 require('dotenv').config();
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
@@ -135,10 +136,11 @@ exports.googleSignin = function(req, res, next) {
   validateWithProvider(network, socialToken)
   .then(function (response) {
     const profile = response.data;
-    const url = 'https://www.googleapis.com/calendar/v3/calendars/'+profile.email+'/events?key=' + process.env.GOOGLE_CLIENT_ID + '/';
+    console.log(GOOGLE_CLIENT_ID)
+    const url = 'https://www.googleapis.com/calendar/v3/calendars/'+profile.email+'/events?key=' + GOOGLE_CLIENT_ID + '/';
     const formattedUrl = new URL(url);
     console.log(formattedUrl)
-    axios.get(formattedUrl, {
+    axios.get(formattedUrl.toString(), {
       params: {
         access_token: socialToken
       }

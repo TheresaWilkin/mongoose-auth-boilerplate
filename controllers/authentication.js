@@ -134,14 +134,6 @@ exports.googleSignin = function(req, res, next) {
   validateWithProvider(network, socialToken)
   .then(function (response) {
     const profile = response.data;
-    console.log(process.env.GOOGLE_CLIENT_ID)
-    axios.get('https://www.googleapis.com/calendar/v3/calendars/tiawilkin%40gmail.com/events?key=' + process.env.GOOGLE_CLIENT_ID + '/', {
-      params: {
-        access_token: socialToken
-      }
-    })
-    .then(respo => console.log(1, 'aaa', respo))
-    .catch(err => console.log(err));
     // Return the user data we got from Facebook
     res.send({ token: tokenForUser(profile) });
   }).catch(function (err) {

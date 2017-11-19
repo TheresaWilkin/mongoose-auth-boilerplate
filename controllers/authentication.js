@@ -108,3 +108,17 @@ exports.signupStudent = function(req, res, next) {
       });
    });
 }
+
+exports.googleSignin = function(req, res, next) {
+  // Grab the social network and token
+  var network = req.body.network;
+  var socialToken = req.body.socialToken;
+
+  // Validate the social token with Facebook
+  validateWithProvider(network, socialToken).then(function (profile) {
+      // Return the user data we got from Facebook
+      res.send('Authenticated as: ' + profile.id);
+  }).catch(function (err) {
+      res.send('Failed!' + err.message);
+  });
+}

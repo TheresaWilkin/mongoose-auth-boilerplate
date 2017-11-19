@@ -13,4 +13,5 @@ module.exports = function(app) {
   app.post('/signin', requireSignin, Authentication.signin);
   app.post('/signup', Authentication.signup);
   app.post('/students/signup', Authentication.signupStudent);
+  app.post('/api/auth', Authentication.googleSignin);
 }

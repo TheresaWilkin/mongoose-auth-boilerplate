@@ -126,28 +126,27 @@ function validateWithProvider(network, socialToken) {
   })
 }
 
+function getCalendarEvents(profile, accessToken) {
+  const url = 'https://www.googleapis.com/calendar/v3/calendars/'+
+    profile.email+'/events?key=' + GOOGLE_CLIENT_ID + '/';
+  const formattedUrl = new URL(url).toString();
+
+  axios.get(formattedUrl, {
+    params: {
+      access_token: socialToken
+    }
+  })
+  .then(response => console.log(response))
+  .catch(err => console.log(err));
+}
 
 exports.googleSignin = function(req, res, next) {
-  // Grab the social network and token
   var network = req.body.network;
   var socialToken = req.body.socialToken;
 
-  // Validate the social token with Facebook
   validateWithProvider(network, socialToken)
   .then(function (response) {
     const profile = response.data;
-    console.log(GOOGLE_CLIENT_ID)
-    const url = 'https://www.googleapis.com/calendar/v3/calendars/'+profile.email+'/events?key=' + GOOGLE_CLIENT_ID + '/';
-    const formattedUrl = new URL(url);
-    console.log(formattedUrl)
-    axios.get(formattedUrl.toString(), {
-      params: {
-        access_token: socialToken
-      }
-    })
-    .then(respo => console.log(1, 'aaa', respo))
-    .catch(err => console.log(err));
-    // Return the user data we got from Facebook
     res.send({ token: tokenForUser(profile) });
   }).catch(function (err) {
     res.send('Failed!' + err.message);

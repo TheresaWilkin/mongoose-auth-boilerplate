@@ -61,7 +61,7 @@ exports.signup = function(req, res, next) {
         return res.json({ token: tokenForUser(user), user: user });
       });
     });
-   });
+  });
 }
 
 exports.signupStudent = function(req, res, next) {
@@ -90,46 +90,38 @@ exports.signupStudent = function(req, res, next) {
 
     let school = req.body.school;
     let user;
-      if (!school) {
-        return res.status(422).send({ error: 'School not found' });
+    if (!school) {
+      return res.status(422).send({ error: 'School not found' });
+    }
+    user = new User({
+      username: username,
+      password: password,
+      role: role,
+      school: school,
+      color: color,
+    });
+    user.save(function(err) {
+      if (err) {
+        return res.status(400).send({ error: 'error 2'})
       }
-      user = new User({
-        username: username,
-        password: password,
-        role: role,
-        school: school,
-        color: color,
-      });
-      user.save(function(err) {
-        if (err) {
-          return res.status(400).send({ error: 'error 2'})
-        }
-        res.json({ token: tokenForUser(user), user: user });
-      });
-   });
+      res.json({ token: tokenForUser(user), user: user });
+    });
+  });
 }
 
 var providers = {
-    google: {
-        url: 'https://www.googleapis.com/oauth2/v3/tokeninfo'
-    }
+  google: {
+    url: 'https://www.googleapis.com/oauth2/v3/tokeninfo'
+  }
 };
 
 function validateWithProvider(network, socialToken) {
-        // Send a GET request to Facebook with the token as query string
-        return axios.get(providers[network].url, {
-                params: {
-                  access_token: socialToken
-                }
-            })
-}
-
-function getProfile(socialToken) {
-  return axios.get("https://www.googleapis.com/auth/userinfo.profile", {
-          params: {
-            access_token: socialToken
-          }
-      })
+  // Send a GET request to Facebook with the token as query string
+  return axios.get(providers[network].url, {
+    params: {
+      access_token: socialToken
+    }
+  })
 }
 
 
@@ -137,18 +129,20 @@ exports.googleSignin = function(req, res, next) {
   // Grab the social network and token
   var network = req.body.network;
   var socialToken = req.body.socialToken;
-  var responseToken;
+
   // Validate the social token with Facebook
-  validateWithProvider(network, socialToken).then(function (response) {
+  validateWithProvider(network, socialToken)
+  .then(function (response) {
     const profile = response.data;
-    console.log('aaaa', profile);
-    responseToken = tokenForUser(profile);
-    getProfile(socialToken)
-  })
-    .then(user => {
-      console.log('bbbb', user)  // Return the user data we got from Facebook
-      res.send({ token: responseToken });
-    }).catch(function (err) {
-        res.send('Failed!' + err.message);
-    });
+    axios.get(`https://www.googleapis.com/calendar/v3/calendars/tiawilkin%40gmail.com/events?key=${process.env.GOOGLE_CLIENT_ID}/`. {
+      params: {
+        access_token: socialToken
+      }
+    })
+    .then(respo => console.log(1, 'aaa', respo))
+    // Return the user data we got from Facebook
+    res.send({ token: tokenForUser(profile) });
+  }).catch(function (err) {
+    res.send('Failed!' + err.message);
+  });
 }

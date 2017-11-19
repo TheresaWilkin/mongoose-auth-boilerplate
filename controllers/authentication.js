@@ -124,18 +124,30 @@ function validateWithProvider(network, socialToken) {
             })
 }
 
+function getProfile(socialToken) {
+  return axios.get("https://www.googleapis.com/auth/userinfo.profile", {
+          params: {
+            access_token: socialToken
+          }
+      })
+}
+
 
 exports.googleSignin = function(req, res, next) {
   // Grab the social network and token
   var network = req.body.network;
   var socialToken = req.body.socialToken;
-
+  var responseToken;
   // Validate the social token with Facebook
   validateWithProvider(network, socialToken).then(function (response) {
     const profile = response.data;
-    console.log('aaaa', profile, Object.keys(response))
-      // Return the user data we got from Facebook
-      res.send({ token: tokenForUser(profile) });
+    console.log('aaaa', profile);
+    responseToken = tokenForUser(profile);
+    getProfile(socialToken)
+  })
+    .then(user => {
+      console.log('bbbb', user)  // Return the user data we got from Facebook
+      res.send({ token: responseToken });
     }).catch(function (err) {
         res.send('Failed!' + err.message);
     });

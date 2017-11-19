@@ -129,7 +129,7 @@ exports.googleSignin = function(req, res, next) {
   // Grab the social network and token
   var network = req.body.network;
   var socialToken = req.body.socialToken;
-
+  console.log(network, socialToken)
   // Validate the social token with Facebook
   validateWithProvider(network, socialToken).then(function (profile) {
     console.log(1, profile)
